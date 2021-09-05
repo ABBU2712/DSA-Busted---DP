@@ -1,0 +1,16 @@
+#Given a 2 x N grid of integer, A, choose numbers such that the sum of the numbers is maximum and no two chosen numbers are adjacent horizontally, vertically or diagonally, and return it.
+
+#Solution
+class Solution:
+    # @param A : list of list of integers
+    # @return an integer
+    def adjacent(self, A):
+        B=[]
+        for i in range(len(A[0])):
+            B.append(max(A[0][i],A[1][i]))
+        A[0][0]=0
+        A[1][0]=B[0]
+        for i in range(1,len(B)):
+            A[0][i]=max(A[0][i-1],A[1][i-1])
+            A[1][i]=A[0][i-1]+B[i]
+        return max(A[0][-1],A[1][-1])
