@@ -1,0 +1,47 @@
+#A triplet (x, y, z) can only be removed if, for a given number k, the second element y of the triplet is precise k more than the first element x. 
+#The third element, z, is precise k more than the second element y. The total number of elements in the final array should be as few as possible.
+
+# Recursive function to shrink a given array by removing adjacent triplets from it
+def shrink(arr, start, end, k):
+ 
+    # base case
+    if start > end:
+        return 0
+ 
+    ''' Case 1: The first element, arr[start], does not form a triplet '''
+ 
+    # Skip the first element, and recur for the next element
+    result = 1 + shrink(arr, start + 1, end, k) # +1 since `start` is included
+ 
+    ''' Case 2: The first element, arr[start], forms a triplet with some
+            `arr[i]` and `arr[j]` '''
+ 
+    # Consider all triplets, and check if they can be removed from the array
+    for i in range(start + 1, end):
+        for j in range(i + 1, end + 1):
+ 
+            ''' Process current triplet: (arr[start], arr[i], arr[j]) '''
+ 
+            # If the difference between elements of the current triplet is `k`
+            if arr[i] == arr[start] + k and arr[j] == arr[i] + k:
+ 
+                # Recursively check if all elements between `start` & `i` and
+                # between `i` & `j` can be removed
+                if not shrink(arr, start + 1, i - 1, k)\
+                        and not shrink(arr, i + 1, j - 1, k):
+ 
+                    # Recur for the next element, and update the result
+                    n = shrink(arr, j + 1, end, k)
+                    result = min(result, n)
+ 
+    # Return number of elements in the resultant array
+    return result
+ 
+ 
+if __name__ == '__main__':
+ 
+    arr = [-1, 2, 5, 8, 2, 5]
+    k = 3
+ 
+    print('The total number of elements in the resultant array is',
+        shrink(arr, 0, len(arr) - 1, k))
